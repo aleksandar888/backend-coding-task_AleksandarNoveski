@@ -1,7 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using Claims.Validation;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Claims
+namespace Claims.Models
 {
     public class Claim
     {
@@ -24,6 +24,7 @@ namespace Claims
         public ClaimType Type { get; set; }
 
         [BsonElement("damageCost")]
+        [MaxDamageCost]
         public decimal DamageCost { get; set; }
     }
 

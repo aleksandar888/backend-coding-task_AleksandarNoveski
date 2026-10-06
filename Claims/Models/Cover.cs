@@ -1,9 +1,9 @@
 using Claims.Validation;
-using Docker.DotNet.Models;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Claims;
+namespace Claims.Models;
 
+[MaxInsurancePeriod]
 public class Cover
 {
     [BsonId]
@@ -11,11 +11,13 @@ public class Cover
 
     // TODO: Verify whether this is still needed; the MongoDB driver may not support DateOnly serialization.
     //[BsonDateTimeOptions(DateOnly = true)]
+    [NotInPast]
     [BsonElement("startDate")]
     public DateTime StartDate { get; set; }
 
     // TODO: Verify whether this is still needed; the MongoDB driver may not support DateOnly serialization.
     // [BsonDateTimeOptions(DateOnly = true)] 
+    [EndDateAfter(nameof(StartDate))]
     [BsonElement("endDate")]
     public DateTime EndDate { get; set; }
 

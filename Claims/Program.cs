@@ -36,9 +36,11 @@ builder.Services
 builder.Services.AddDbContext<AuditContext>(options =>
     options.UseSqlServer(sqlContainer.GetConnectionString()));
 
-builder.Services.AddDbContext<ClaimsContext>(options =>
+builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoContainer.GetConnectionString()));
+
+builder.Services.AddDbContext<ClaimsContext>((serviceProvider, options) =>
 {
-    var client = new MongoClient(mongoContainer.GetConnectionString());
+    var client = serviceProvider.GetRequiredService<IMongoClient>();
     var database = client.GetDatabase(builder.Configuration["MongoDb:DatabaseName"]); // Use a default/test database name
     options.UseMongoDB(database.Client, database.DatabaseNamespace.DatabaseName);
 });
