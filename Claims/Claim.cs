@@ -12,7 +12,9 @@ namespace Claims
         public string CoverId { get; set; }
 
         [BsonElement("created")]
-        [BsonDateTimeOptions(DateOnly = true)]
+
+        // TODO: Verify whether this is still needed; the MongoDB driver may not support DateOnly serialization.
+        // [BsonDateTimeOptions(DateOnly = true)]
         public DateTime Created { get; set; }
 
         [BsonElement("name")]
