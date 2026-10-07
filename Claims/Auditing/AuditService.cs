@@ -2,36 +2,18 @@ namespace Claims.Auditing;
 
 public sealed class AuditService : IAuditService
 {
-    private readonly AuditContext _context;
+    private readonly IAuditQueue _queue;
 
-    public AuditService(AuditContext context)
+    public AuditService(IAuditQueue queue)
     {
-        _context = context;
+        _queue = queue;
     }
 
-    public Task AuditClaimAsync(string id, string requestType)
-    {
-        var audit = new ClaimAudit
-        {
-            Created = DateTime.Now,
-            HttpRequestType = requestType,
-            ClaimId = id
-        };
+    public Task AuditClaimAsync(string id, string requestType) =>
+        _queue.EnqueueAsync(new AuditEvent(
+            AuditEntity.Claim, id, requestType, DateTime.Now)).AsTask();
 
-        _context.ClaimAudits.Add(audit);
-        return _context.SaveChangesAsync();
-    }
-
-    public Task AuditCoverAsync(string id, string requestType)
-    {
-        var audit = new CoverAudit
-        {
-            Created = DateTime.Now,
-            HttpRequestType = requestType,
-            CoverId = id
-        };
-
-        _context.CoverAudits.Add(audit);
-        return _context.SaveChangesAsync();
-    }
+    public Task AuditCoverAsync(string id, string requestType) =>
+        _queue.EnqueueAsync(new AuditEvent(
+            AuditEntity.Cover, id, requestType, DateTime.Now)).AsTask();
 }

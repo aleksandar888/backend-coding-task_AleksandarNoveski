@@ -35,6 +35,8 @@ builder.Services
 
 builder.Services.AddDbContext<AuditContext>(options =>
     options.UseSqlServer(sqlContainer.GetConnectionString()));
+builder.Services.AddSingleton<IAuditQueue, AuditQueue>();
+builder.Services.AddHostedService<AuditBackgroundService>();
 
 builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoContainer.GetConnectionString()));
 
