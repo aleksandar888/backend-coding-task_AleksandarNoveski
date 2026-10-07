@@ -11,35 +11,28 @@ public sealed class CoverPremiumCalculator : ICoverPremiumCalculator
 {
     public decimal Compute(DateTime startDate, DateTime endDate, CoverType coverType)
     {
-        var multiplier = 1.3m;
-        if (coverType == CoverType.Yacht)
+        const decimal baseDayRate = 1250m;
+
+        var typeMultiplier = coverType switch
         {
-            multiplier = 1.1m;
-        }
+            CoverType.Yacht => 1.1m,
+            CoverType.PassengerShip => 1.2m,
+            CoverType.Tanker => 1.5m,
+            _ => 1.3m
+        };
 
-        if (coverType == CoverType.PassengerShip)
-        {
-            multiplier = 1.2m;
-        }
+        var premiumPerDay = baseDayRate * typeMultiplier;
+        var insuranceLength = Math.Max(0m, (decimal)(endDate - startDate).TotalDays);
+        var firstTierDays = Math.Min(insuranceLength, 30m);
+        var secondTierDays = Math.Min(Math.Max(insuranceLength - 30m, 0m), 150m);
+        var remainingDays = Math.Max(insuranceLength - 180m, 0m);
 
-        if (coverType == CoverType.Tanker)
-        {
-            multiplier = 1.5m;
-        }
+        var secondTierDiscount = coverType == CoverType.Yacht ? 0.05m : 0.02m;
 
-        var premiumPerDay = 1250 * multiplier;
-        var insuranceLength = (endDate - startDate).TotalDays;
-        var totalPremium = 0m;
+        var finalTierDiscount = coverType == CoverType.Yacht ? 0.08m : 0.03m;
 
-        for (var i = 0; i < insuranceLength; i++)
-        {
-            if (i < 30) totalPremium += premiumPerDay;
-            if (i < 180 && coverType == CoverType.Yacht) totalPremium += premiumPerDay - premiumPerDay * 0.05m;
-            else if (i < 180) totalPremium += premiumPerDay - premiumPerDay * 0.02m;
-            if (i < 365 && coverType != CoverType.Yacht) totalPremium += premiumPerDay - premiumPerDay * 0.03m;
-            else if (i < 365) totalPremium += premiumPerDay - premiumPerDay * 0.08m;
-        }
-
-        return totalPremium;
+        return firstTierDays * premiumPerDay
+            + secondTierDays * premiumPerDay * (1m - secondTierDiscount)
+            + remainingDays * premiumPerDay * (1m - finalTierDiscount);
     }
 }
