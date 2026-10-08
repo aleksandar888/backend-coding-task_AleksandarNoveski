@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Claims.Models;
+using Claims.Contracts.Requests;
+
 
 namespace Claims.Validation;
 
@@ -18,7 +19,7 @@ public sealed class MaxInsurancePeriodAttribute : ValidationAttribute
             return true;
         }
 
-        return value is Cover cover &&
+        return value is CreateCoverRequest cover &&
             (cover.StartDate.Year == DateTime.MaxValue.Year || cover.EndDate <= cover.StartDate.AddYears(1));
     }
 }

@@ -3,21 +3,14 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Claims.Models;
 
-[MaxInsurancePeriod]
 public class Cover
 {
     [BsonId]
     public string Id { get; set; }
 
-    // TODO: Verify whether this is still needed; the MongoDB driver may not support DateOnly serialization.
-    //[BsonDateTimeOptions(DateOnly = true)]
-    [NotInPast]
     [BsonElement("startDate")]
     public DateTime StartDate { get; set; }
 
-    // TODO: Verify whether this is still needed; the MongoDB driver may not support DateOnly serialization.
-    // [BsonDateTimeOptions(DateOnly = true)] 
-    [EndDateAfter(nameof(StartDate))]
     [BsonElement("endDate")]
     public DateTime EndDate { get; set; }
 

@@ -1,5 +1,6 @@
 using Claims.Auditing;
 using Claims.Data;
+using Claims.Logging;
 using Claims.Services;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
@@ -48,6 +49,7 @@ builder.Services.AddDbContext<ClaimsContext>((serviceProvider, options) =>
 });
 
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<IErrorLoggingService, ErrorLoggingService>();
 builder.Services.AddScoped<IClaimsRepository, ClaimsRepository>();
 builder.Services.AddScoped<ICoversRepository, CoversRepository>();
 builder.Services.AddScoped<IClaimsService, ClaimsService>();
