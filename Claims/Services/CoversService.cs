@@ -15,7 +15,7 @@ public sealed class CoversService : ICoversService
         ICoversRepository repository,
         IAuditService auditService,
         ICoverPremiumCalculator premiumCalculator,
-         IErrorLoggingService errorLoggingService)
+        IErrorLoggingService errorLoggingService)
     {
         _repository = repository;
         _auditService = auditService;
@@ -50,16 +50,17 @@ public sealed class CoversService : ICoversService
         }
     }
 
-    public async Task DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(string id)
     {
         await _auditService.AuditCoverAsync(id, "DELETE");
         var cover = await GetByIdAsync(id);
         if (cover is null)
         {
-            return;
+            return false;
         }
 
         await _repository.DeleteAsync(cover);
+        return true;
     }
 
     public decimal ComputePremium(DateTime startDate, DateTime endDate, CoverType coverType)

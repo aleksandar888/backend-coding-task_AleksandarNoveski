@@ -10,7 +10,7 @@ public interface ICoversService
 
     Task<Cover> CreateAsync(Cover cover);
 
-    Task DeleteAsync(string id);
+    Task<bool> DeleteAsync(string id);
 
     decimal ComputePremium(DateTime startDate, DateTime endDate, CoverType coverType);
 }
