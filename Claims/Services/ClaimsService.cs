@@ -1,6 +1,6 @@
 using Claims.Auditing;
+using Claims.Data;
 using Claims.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace Claims.Services;
 
