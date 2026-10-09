@@ -12,9 +12,6 @@ namespace Claims.Models
         public string CoverId { get; set; }
 
         [BsonElement("created")]
-
-        // TODO: Verify whether this is still needed; the MongoDB driver may not support DateOnly serialization.
-        // [BsonDateTimeOptions(DateOnly = true)]
         public DateTime Created { get; set; }
 
         [BsonElement("name")]
@@ -24,7 +21,6 @@ namespace Claims.Models
         public ClaimType Type { get; set; }
 
         [BsonElement("damageCost")]
-        [MaxDamageCost]
         public decimal DamageCost { get; set; }
     }
 

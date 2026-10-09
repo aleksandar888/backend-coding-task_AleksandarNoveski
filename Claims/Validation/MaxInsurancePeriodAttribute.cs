@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Claims.Contracts.Requests;
-
 
 namespace Claims.Validation;
 

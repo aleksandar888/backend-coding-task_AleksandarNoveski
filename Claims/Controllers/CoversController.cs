@@ -1,5 +1,4 @@
 using Claims.Models;
-using Claims.Contracts.Requests;
 using Claims.Logging;
 using Claims.Services;
 using Microsoft.AspNetCore.Mvc;

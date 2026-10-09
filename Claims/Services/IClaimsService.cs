@@ -8,7 +8,7 @@ public interface IClaimsService
 
     Task<Claim?> GetByIdAsync(string id);
 
-    Task<Claim> CreateAsync(Claim claim);
+    Task<(Claim? Claim, string? Error)> CreateAsync(Claim claim);
 
-    Task DeleteAsync(string id);
+    Task<bool> DeleteAsync(string id);
 }

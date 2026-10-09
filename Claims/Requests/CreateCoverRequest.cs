@@ -1,8 +1,6 @@
 using Claims.Models;
 using Claims.Validation;
 
-namespace Claims.Contracts.Requests;
-
 [MaxInsurancePeriod]
 public sealed class CreateCoverRequest
 {

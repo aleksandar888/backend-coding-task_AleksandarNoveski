@@ -30,33 +30,36 @@ public sealed class ClaimsService : IClaimsService
         return _repository.GetByIdAsync(id);
     }
 
-    public async Task<Claim> CreateAsync(Claim claim)
+    public async Task<(Claim? Claim, string? Error)> CreateAsync(Claim claim)
     {
         var cover = await _coversRepository.GetByIdAsync(claim.CoverId);
         if (cover is null)
         {
-            throw new ValidationException("Please select a valid cover.");
+            return (null, "Please select a valid cover.");
         }
-        else if (claim.Created < cover.StartDate || claim.Created > cover.EndDate)
+
+        if (claim.Created.Date < cover.StartDate.Date || claim.Created.Date > cover.EndDate.Date)
         {
-            throw new ValidationException("Claim created date must be within the related cover's insurance period.");
+            return (null, "Claim created date must be within the related cover's insurance period.");
         }
 
         claim.Id = Guid.NewGuid().ToString();
         await _repository.AddAsync(claim);
         await _auditService.AuditClaimAsync(claim.Id, "POST");
-        return claim;
+
+        return (claim, null);
     }
 
-    public async Task DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(string id)
     {
         await _auditService.AuditClaimAsync(id, "DELETE");
         var claim = await GetByIdAsync(id);
         if (claim is null)
         {
-            return;
+            return false;
         }
 
         await _repository.DeleteAsync(claim);
+        return true;
     }
 }
