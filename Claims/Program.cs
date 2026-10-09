@@ -6,27 +6,27 @@ using Claims.Services.CoverPremiumCalculator;
 using Claims.Services.Logging;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
-using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
-using Testcontainers.MongoDb;
-using Testcontainers.MsSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Start Testcontainers for SQL Server and MongoDB
-var sqlContainer = (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-        ? new MsSqlBuilder()
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-        : new()
+var auditSqlConnectionString = builder.Configuration["ConnectionStrings:AuditSql"];
+if (string.IsNullOrWhiteSpace(auditSqlConnectionString))
+{
+    throw new InvalidOperationException("The 'ConnectionStrings:AuditSql' configuration value is required.");
+}
 
-    ).Build();
+var mongoConnectionString = builder.Configuration["ConnectionStrings:MongoDb"];
+if (string.IsNullOrWhiteSpace(mongoConnectionString))
+{
+    throw new InvalidOperationException("The 'MongoDb:ConnectionString' configuration value is required.");
+}
 
-var mongoContainer = new MongoDbBuilder()
-    .WithImage("mongo:latest")
-    .Build();
-
-await sqlContainer.StartAsync();
-await mongoContainer.StartAsync();
+var mongoDatabaseName = builder.Configuration["MongoDb:DatabaseName"];
+if (string.IsNullOrWhiteSpace(mongoDatabaseName))
+{
+    throw new InvalidOperationException("The 'MongoDb:DatabaseName' configuration value is required.");
+}
 
 // Add services to the container.
 builder.Services
@@ -37,16 +37,16 @@ builder.Services
     });
 
 builder.Services.AddDbContext<AuditContext>(options =>
-    options.UseSqlServer(sqlContainer.GetConnectionString()));
+    options.UseSqlServer(auditSqlConnectionString));
 builder.Services.AddSingleton<IAuditQueue, AuditQueue>();
 builder.Services.AddHostedService<AuditBackgroundService>();
 
-builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoContainer.GetConnectionString()));
+builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoConnectionString));
 
 builder.Services.AddDbContext<ClaimsContext>((serviceProvider, options) =>
 {
     var client = serviceProvider.GetRequiredService<IMongoClient>();
-    var database = client.GetDatabase(builder.Configuration["MongoDb:DatabaseName"]); // Use a default/test database name
+    var database = client.GetDatabase(mongoDatabaseName);
     options.UseMongoDB(database.Client, database.DatabaseNamespace.DatabaseName);
 });
 
