@@ -1,5 +1,5 @@
 using Claims.Models;
-using Claims.Services;
+using Claims.Services.CoverPremiumCalculator;
 using Xunit;
 
 namespace Claims.Tests.Services;

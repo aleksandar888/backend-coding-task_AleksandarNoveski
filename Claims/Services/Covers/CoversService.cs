@@ -1,9 +1,10 @@
 using Claims.Auditing;
 using Claims.Data;
-using Claims.Logging;
 using Claims.Models;
+using Claims.Services.CoverPremiumCalculator;
+using Claims.Services.Logging;
 
-namespace Claims.Services;
+namespace Claims.Services.Covers;
 
 public sealed class CoversService : ICoversService
 {

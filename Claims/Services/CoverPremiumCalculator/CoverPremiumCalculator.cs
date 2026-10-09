@@ -1,6 +1,6 @@
 using Claims.Models;
 
-namespace Claims.Services;
+namespace Claims.Services.CoverPremiumCalculator;
 
 public interface ICoverPremiumCalculator
 {

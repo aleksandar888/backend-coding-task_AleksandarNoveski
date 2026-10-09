@@ -1,7 +1,7 @@
 using Claims.Models;
-using Claims.Logging;
-using Claims.Services;
 using Microsoft.AspNetCore.Mvc;
+using Claims.Services.Logging;
+using Claims.Services.Covers;
 
 namespace Claims.Controllers;
 

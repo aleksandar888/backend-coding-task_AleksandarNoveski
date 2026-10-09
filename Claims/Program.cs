@@ -1,7 +1,9 @@
 using Claims.Auditing;
 using Claims.Data;
-using Claims.Logging;
-using Claims.Services;
+using Claims.Services.Claims;
+using Claims.Services.Covers;
+using Claims.Services.CoverPremiumCalculator;
+using Claims.Services.Logging;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using System.Runtime.InteropServices;

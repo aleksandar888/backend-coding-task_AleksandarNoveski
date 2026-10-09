@@ -2,7 +2,7 @@ using Claims.Auditing;
 using Claims.Data;
 using Claims.Models;
 
-namespace Claims.Services;
+namespace Claims.Services.Claims;
 
 public sealed class ClaimsService : IClaimsService
 {

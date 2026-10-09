@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace Claims.Logging;
+namespace Claims.Services.Logging;
 
 public sealed class ErrorLoggingService : IErrorLoggingService
 {

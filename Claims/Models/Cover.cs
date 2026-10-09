@@ -1,4 +1,3 @@
-using Claims.Validation;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Claims.Models;

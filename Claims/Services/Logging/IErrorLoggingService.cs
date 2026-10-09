@@ -1,4 +1,4 @@
-namespace Claims.Logging;
+namespace Claims.Services.Logging;
 
 public interface IErrorLoggingService
 {
